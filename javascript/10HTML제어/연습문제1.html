@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="now"></h1>
+    <script>
+        function today() {
+        const now1 = document.getElementById('now');
+        const new1 = new Date();
+        const yyyy = new1.getFullYear();
+        const mm = new1.getMonth()+1;
+        const dd = new1.getDate();
+        const hh = new1.getHours();
+        const mi = new1.getMinutes();
+        const ss = new1.getSeconds();
+        now1.innerHTML = yyyy + "-" + mm + "-" + dd + " " + hh + ":" + mi + ":" + ss;
+        }
+        setInterval(today,1000);
+    </script>
+</body>
+</html>
+
+

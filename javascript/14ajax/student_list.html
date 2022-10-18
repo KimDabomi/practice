@@ -1,0 +1,89 @@
+<!-- [student_list.html]
+
+페이지가 열림과 동시에 특별한 이벤트 없이 학생 목록을 조회하여 화면에 table 형식으로 출력
+
+http://localhost:3001/student
+
+출력할 항목은 학생번호(id), 이름(name), 학년(grade), 연락처(tel) 만 표시함
+
+학생의 이름을 클릭했을 경우
+
+student_info.html 페이지로 <a>태그를 사용하여 이동해야 한다.
+이 때 학생번호를 id라는 이름의 변수로 넘긴다.
+
+-----------------------------
+
+[stduent_info.html]
+
+페이지가 열림과 동시에 전달받은 id변수를 수신한다. -> UtilHelper에 만들어 둔 기능 활용
+해당 id변수를 활용하여 해당 학생의 모든 정보를 출력한다.
+
+-> http://localhost:3001/student/id값  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Student List</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>학생번호</th>
+                <th>이름</th>
+                <th>학년</th>
+                <th>연락처</th>
+            </tr>
+        </thead>
+        <tbody id="list-body"></tbody>
+    </table>
+    <script type="module">
+        import ajaxHelper from '../helper/AjaxHelper.js';
+
+        (async (e) => {
+            let json = null;
+
+            try {
+                json = await ajaxHelper.requestAsync('http://localhost:3001/student');
+                console.log(json);
+            } catch (e) {
+                console.error(e);
+                alert(`[${e.status}] ${e.text}\n${e.msg}`);
+                return;  
+            }
+
+            const listBody = document.querySelector('#list-body');
+
+            json.forEach((v,i) => {
+                const tr = document.createElement('tr');
+
+                const td1 = document.createElement('td');
+                td1.innerHTML = v.id;
+
+                const td2 = document.createElement('td');
+                const a = document.createElement('a');
+                a.setAttribute('href',`student_info.html?id=${v.id}`);
+                td2.appendChild(a);
+                a.innerHTML = v.name;
+
+                const td3 = document.createElement('td');
+                td3.innerHTML = v.grade;
+
+                const td4 = document.createElement('td');
+                td4.innerHTML = v.tel;
+
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                tr.appendChild(td4);
+
+                listBody.appendChild(tr);
+            });
+        })();
+    </script>
+</body>
+</html>

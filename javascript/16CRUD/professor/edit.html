@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생관리 ::: MySchool</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div data-include="./inc/header.html"></div>
+
+        <section>
+            <form name="form" id="professor-form">
+                <input type="hidden" id="id" name="id" />
+                <div class="form-group">
+                    <label for="name"> 교수이름 <span class="text-danger">*</span> </label>
+                    <div>
+                        <input type="text" name="name" id="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="userid"> 교수아이디 <span class="text-danger">*</span> </label>
+                    <div>
+                        <input type="text" name="userid" id="userid">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="position"> 직책 <span class="text-danger">*</span> </label>
+                    <div>
+                        <input type="text" name="position" id="position">
+                    </div>
+                </div>
+                <hr />
+                <div class="text-center">
+                    <button type="submit">저장하기</button>
+                    <button type="reset">다시작성</button>
+                </div>
+            </form>
+        </section>
+
+        <div data-include="./inc/footer.html"></div>
+    </div>
+
+    <script src="../../node_modules/axios/dist/axios.min.js"></script>
+    <script src="../assets/js/include.js"></script>
+    <script type="module">
+        import utilHelper from '../../helper/UtilHelper.js';
+        import RegexHelper from '../../helper/RegexHelper.js';
+
+        (async () => {
+            const params = utilHelper.getUrlParams();
+            
+            if (!params.id) {
+                alert('학과번호가 없습니다.');
+                history.back();
+                return;
+            }
+
+            let json = null;
+            try {
+                const response = await axios.get(`http://localhost:3001/professor/${params.id}/`);
+                json = response.data;
+            } catch (e) {
+                console.error(e);
+                alert('요청을 처리하는데 실패했습니다.');
+                return;
+            }
+
+            document.querySelector('#id').value = json.id;
+            document.querySelector('#name').value = json.name;
+            document.querySelector('#userid').value = json.userid;
+            document.querySelector('#position').value = json.position;
+        })();
+
+        document.querySelector('#professor-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.querySelector('#id').value;
+            const name = document.querySelector('#name').value;
+            const userid = document.querySelector('#userid').value;
+            const position = document.querySelector('#position').value;
+
+            // 입력값에 대한 유효성 검사
+            const regexHelper = RegexHelper.getInstance();
+            try {
+                regexHelper.value(document.querySelector('#userid'), '아이디를 입력하세요.');
+                regexHelper.engNum(document.querySelector('#userid'), '아이디는 영문과 숫자만 입력 가능합니다.');
+            } catch (e) {
+                alert(e.message);
+                console.error(e);
+                e.selector.focus();
+                return;
+            }
+
+            try {
+                await axios.put(`http://localhost:3001/professor/${id}/`, {
+                    name: name,
+                    userid: userid,
+                    position: position
+                });
+            } catch (e) {
+                console.error(e);
+                alert('요청을 처리하는데 실패했습니다.');
+                return;
+            }
+            // alert('수정되었습니다.');
+           window.location.href = `view.html?id=${id}`;
+        });
+    </script>
+</body>
+</html>
