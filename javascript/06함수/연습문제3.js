@@ -30,4 +30,4 @@ function myGame(n) {
     console.log();
     console.log("박수를 총 %d번 쳤습니다.", count);
 }
-myGame(35);
+myGame(13);

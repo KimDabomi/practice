@@ -13,5 +13,5 @@ for (let i=0; i<grade.length; i++) {
     }
     avg = sum / grade[i].length;
     avg = avg.toFixed(2);
+    console.log(student[i] + " 총점: " + sum + "점, 평균: " + avg + "점");
 }
-console.log(student[i] + " 총점: " + sum + "점, 평균: " + avg + "점");
