@@ -5,6 +5,7 @@ import Counter from './pages/Counter';
 import Department from './pages/Department';
 import News from './pages/News';
 import MovieRank from './pages/MovieRank';
+import ImageSearch from './pages/ImageSearch';
 
 const App = memo(() => {
   return (
@@ -15,12 +16,14 @@ const App = memo(() => {
         <MenuLink to='/department'>Department</MenuLink>
         <MenuLink to='/news'>News</MenuLink>
         <MenuLink to='/movierank'>MovieRank</MenuLink>
+        <MenuLink to='/image_search'>ImageSearch</MenuLink>
       </nav>
       <Routes>
         <Route path='/counter' element={<Counter />} />
         <Route path='/department' element={<Department />} />
         <Route path='/news' element={<News />} />
         <Route path='/movierank' element={<MovieRank />} />
+        <Route path='/image_search' element={<ImageSearch />} />
       </Routes>
     </div>
   );

@@ -5,9 +5,9 @@ import axios from 'axios';
 export const getMovieRank = createAsyncThunk("MovieRankSlice/getMovieRank", async (payload, {rejectWithValue }) => {
     let result = null;
     try {
-        const response = await axios.get("http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json",{
+        const response = await axios.get(process.env.REACT_APP_KOBIS_API_URL,{
             params: {
-                key: "e78ddc99753147ef1de4911913145b75",
+                key: process.env.REACT_APP_KOBIS_API_KEY,
                 // 컨트롤러에서 전달하는 파라미터는 payload로 전달된다 -> 단일값인 경우 payload 자체가 그 값, json인 경우 payload가 json이 된다.
                 targetDt: payload.targetDt
             }

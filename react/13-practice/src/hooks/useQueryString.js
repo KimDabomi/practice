@@ -1,0 +1,17 @@
+import { useLocation } from "react-router-dom";
+
+const useQueryString = (props) => {
+    // QueryString 문자열 추출
+    const {search} = useLocation();
+
+    // QueryString 문자열을 객체로 반환
+    const query = new URLSearchParams(search);
+
+    // 생성된 객체를 json으로 변환
+    const params = Object.fromEntries(query);
+
+    // 상태값 리턴
+    return params;
+};
+
+export {useQueryString};
