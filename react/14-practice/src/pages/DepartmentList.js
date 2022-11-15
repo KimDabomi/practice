@@ -3,8 +3,8 @@ import { NavLink,useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import ErrorView from '../components/ErrorView';
 import Table from '../components/Table';
-import { useDispatch, useSelector,usrDispatch } from 'react-redux';
-import {getList} from '../slices/DepartmentSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {getList,deleteItem} from '../slices/DepartmentSlice';
 import styled from 'styled-components';
 import {useQueryString} from '../hooks/useQueryString';
 
@@ -62,10 +62,33 @@ const DepartmentList = memo(() => {
 
     const current = e.currentTarget;
     const keyword = current.keyword;
-    
-    let redirectUrl = keyword.value ? `/?keyword=${keyword.value}` : '/';
-    navigate(redirectUrl);
+
+    navigate(`/?keyword=${keyword.value}`);
   },[navigate]);
+
+  // 삭제 버튼에 대한 이벤트 리스너
+  const onDepartmentItemDelete = useCallback(e => {
+    e.preventDefault();
+
+    const current = e.currentTarget;
+    const {id,dname} = current.dataset;
+
+    if (window.confirm(`정말 ${dname}(을)를 삭제하시겠습니까?`)) {
+      dispatch(deleteItem({
+        id: id
+      }));
+    }
+  },[]);
+
+  // 수정 버튼에 대한 이벤트 리스너
+  const onDepartmentEditClick = useCallback(e => {
+    e.preventDefault();
+
+    const current = e.currentTarget;
+    const {id} = current.dataset;
+
+    navigate(`/department_edit/${id}`);
+  });
 
   return (
     <div>
@@ -75,7 +98,7 @@ const DepartmentList = memo(() => {
       <ControlContainer onSubmit={onSearchSubmit}>
         <input type='text' name='keyword' className='control' />
         <button type='submit' className='control clickable'>검색</button>
-        <NavLink to='department_add' className='control clickable'>학과정보 추가하기</NavLink>
+        <NavLink to='/department_add' className='control clickable'>학과정보 추가하기</NavLink>
       </ControlContainer>
 
       {/* 조회결과 표시하기 */}
@@ -102,13 +125,15 @@ const DepartmentList = memo(() => {
                     return (
                       <tr key={v.id}>
                         <td>{v.id}</td>
-                        <td>{v.dname}</td>
+                        <td>
+                          <NavLink to={`/department_view/${v.id}`}>{v.dname}</NavLink>
+                        </td>
                         <td>{v.loc}</td>
                         <td>
-                          <button type='button'>수정하기</button>
+                          <button type='button' data-id={v.id} onClick={onDepartmentEditClick}>수정하기</button>
                         </td>
                         <td>
-                          <button type='button'>삭제하기</button>
+                          <button type='button' data-id={v.id} data-dname={v.dname} onClick={onDepartmentItemDelete}>삭제하기</button>
                         </td>
                       </tr>
                     )
